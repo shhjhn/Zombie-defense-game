@@ -345,13 +345,25 @@ playBtn.addEventListener("click", startGame);
 
 // Typing
 
+
 wordInput.addEventListener("input", () => {
     const typed = wordInput.value.trim().toUpperCase();
 
-    // Find a matching zombie in the selected lane
+    console.log("TYPED:", typed);
+    console.log("SELECTED LANE:", selectedLane);
+
+    console.log("ZOMBIES:", zombies.map(z => ({
+        word: z.word,
+        lane: z.lane
+    })));
+
     const targetIndex = zombies.findIndex(zombie => {
+        const zombieLane = Number(
+            zombie.element.parentElement.dataset.lane
+        );
+
         return (
-            Number(zombie.lane) === Number(selectedLane) &&
+            zombieLane === selectedLane &&
             zombie.word.trim().toUpperCase() === typed
         );
     });
@@ -366,34 +378,11 @@ wordInput.addEventListener("input", () => {
         scoreValue.textContent = score;
 
         wordInput.value = "";
+
+        console.log("ZOMBIE ELIMINATED!");
     }
 });
 
-document.addEventListener("keydown", event => {
-    if (!gameRunning) {
-        if (event.key === "Enter" &&
-            gameContainer.style.display !== "none") {
-            startGame();
-        }
-        return;
-    }
-
-    if (event.key === "ArrowUp") {
-        event.preventDefault();
-        selectedLane = Math.max(0, selectedLane - 1);
-        updateLaneSelection();
-    }
-
-    if (event.key === "ArrowDown") {
-        event.preventDefault();
-        selectedLane = Math.min(4, selectedLane + 1);
-        updateLaneSelection();
-    }
-
-    if (event.key === "Escape") {
-        exitToMenu();
-    }
-});
 
 // Game over
 function endGame() {
