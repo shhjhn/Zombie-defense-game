@@ -735,6 +735,105 @@ footer {
         padding: 28px 22px;
     }
 
+/* ==========================================
+   BUILD 0.2 - FULL SCREEN LAYOUT
+========================================== */
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+.game-container {
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(14px, 2.5vh, 25px) 7%;
+}
+
+.topbar {
+    flex-shrink: 0;
+    padding-bottom: clamp(12px, 2vh, 20px);
+}
+
+.hero {
+    flex: 1;
+    min-height: 0;
+    padding: clamp(12px, 2.5vh, 25px) 0;
+    gap: 3vw;
+}
+
+.hero-content {
+    min-height: 0;
+}
+
+.hero h1 {
+    font-size: clamp(52px, 7vw, 90px);
+}
+
+.description {
+    margin-top: 16px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.buttons {
+    gap: 8px;
+}
+
+.buttons button {
+    min-height: 40px;
+    padding: 9px 15px;
+}
+
+.enter-hint {
+    margin-top: 15px;
+}
+
+.hero-art {
+    height: min(48vh, 430px);
+    min-height: 0;
+}
+
+footer {
+    flex-shrink: 0;
+    padding-top: 12px;
+}
+
+/* Short laptop screens */
+
+@media (max-height: 700px) and (min-width: 851px) {
+    .hero h1 {
+        font-size: 58px;
+    }
+
+    .description {
+        margin-top: 10px;
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+
+    .buttons {
+        gap: 6px;
+    }
+
+    .buttons button {
+        min-height: 34px;
+        padding: 7px 12px;
+    }
+
+    .hero-art {
+        height: 42vh;
+    }
+
+    .enter-hint {
+        margin-top: 9px;
+    }
+}
+
     footer {
         font-size: 8px;
     }
