@@ -28,11 +28,35 @@ let spawnTimer = null;
 let animationFrame = null;
 let lastTime = 0;
 
+
 const words = [
     "BRAIN", "HUNGRY", "NIGHT", "DANGER",
     "HOUSE", "RUN", "ZOMBIE", "DARK",
-    "ATTACK", "SURVIVE", "ALERT", "GHOST"
+    "ATTACK", "SURVIVE", "ALERT", "GHOST",
+    "SHADOW", "FOREST", "MONSTER", "ESCAPE",
+    "SILENCE", "HUNTER", "DREAM", "BLOOD",
+    "CASTLE", "WINDOW", "STORM", "THUNDER",
+    "LIGHT", "FIRE", "WATER", "EARTH",
+    "POWER", "ENERGY", "MAGIC", "SECRET",
+    "MYSTERY", "ANCIENT", "DANGER", "DEFEND",
+    "PROTECT", "SHELTER", "SURVIVAL", "DARKNESS",
+    "PHANTOM", "CREATURE", "NIGHTMARE", "WARNING",
+    "SOLDIER", "WARRIOR", "WEAPON", "BATTLE",
+    "VICTORY", "MISSION", "CHALLENGE", "STRATEGY",
+    "Courage", "RESCUE", "FORTRESS", "GUARDIAN",
+    "JOURNEY", "TREASURE", "KINGDOM", "LEGEND",
+    "MACHINE", "CIRCUIT", "ROBOT", "DIGITAL",
+    "NETWORK", "SYSTEM", "PROGRAM", "COMPUTER",
+    "KEYBOARD", "MONITOR", "PROCESSOR", "MEMORY",
+    "GALAXY", "PLANET", "UNIVERSE", "COSMIC",
+    "ORBIT", "METEOR", "ASTEROID", "SATELLITE",
+    "OCEAN", "MOUNTAIN", "DESERT", "JUNGLE",
+    "RIVER", "VALLEY", "ISLAND", "VOLCANO",
+    "CRYSTAL", "DIAMOND", "SAPPHIRE", "EMERALD",
+    "LIGHTNING", "TORNADO", "HURRICANE", "BLIZZARD",
+    "ADVENTURE", "EXPEDITION", "DISCOVERY", "EXPLORATION"
 ];
+
 
 const settings = {
     Easy: { speed: 4, spawn: 3000 },
