@@ -4,26 +4,28 @@ const difficultyBtn = document.getElementById("difficultyBtn");
 const howBtn = document.getElementById("howBtn");
 const settingsBtn = document.getElementById("settingsBtn");
 
+const gameContainer = document.querySelector(".game-container");
 const gameScreen = document.getElementById("gameScreen");
 const battlefield = document.getElementById("battlefield");
 const wordInput = document.getElementById("wordInput");
+
 const scoreValue = document.getElementById("scoreValue");
 const homeHealth = document.getElementById("homeHealth");
 const exitGame = document.getElementById("exitGame");
 
 const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
-const closeModal = document.getElementById("closeModal");
+const modalContent = document.getElementById("modalContent");
+const closeBtn = document.getElementById("closeBtn");
 
 let difficulty = "Easy";
 let score = 0;
 let health = 100;
-let zombies = [];
 let selectedLane = 2;
+let zombies = [];
 let gameRunning = false;
-let spawnTimer;
-let gameLoop;
+let spawnTimer = null;
+let animationFrame = null;
 let lastTime = 0;
 
 const words = [
@@ -33,178 +35,277 @@ const words = [
 ];
 
 const settings = {
-    Easy: { speed: 3, spawn: 2800 },
-    Medium: { speed: 4.5, spawn: 2200 },
-    Hard: { speed: 6, spawn: 1700 }
+    Easy: { speed: 4, spawn: 3000 },
+    Medium: { speed: 6, spawn: 2400 },
+    Hard: { speed: 8, spawn: 1900 }
 };
 
-function showModal(title, text) {
-    if (!modal) return;
+// Modal
+function showModal(title, message) {
     modalTitle.textContent = title;
-    modalText.textContent = text;
+    modalContent.textContent = message;
+    modal.classList.remove("hidden");
     modal.classList.add("active");
 }
 
 function hideModal() {
-    if (modal) modal.classList.remove("active");
+    modal.classList.add("hidden");
+    modal.classList.remove("active");
 }
 
-if (closeModal) closeModal.addEventListener("click", hideModal);
+closeBtn.addEventListener("click", hideModal);
 
-if (modal) {
-    modal.addEventListener("click", event => {
-        if (event.target === modal) hideModal();
-    });
+modal.addEventListener("click", event => {
+    if (event.target === modal) hideModal();
+});
+
+// Difficulty
+difficultyBtn.addEventListener("click", () => {
+    const levels = ["Easy", "Medium", "Hard"];
+    difficulty = levels[(levels.indexOf(difficulty) + 1) % 3];
+
+    document.getElementById("difficulty").textContent =
+        difficulty.toUpperCase();
+});
+
+// Instructions
+howBtn.addEventListener("click", () => {
+    showModal(
+        "HOW TO PLAY",
+        "Select a lane using the UP and DOWN arrow keys. Type the word above a zombie to defeat it. Protect your home!"
+    );
+});
+
+// Settings
+settingsBtn.addEventListener("click", () => {
+    showModal(
+        "SETTINGS",
+        "Music and sound controls will be added in a future update."
+    );
+});
+
+// Game appearance
+const gameStyles = document.createElement("style");
+
+gameStyles.textContent = `
+.game-screen {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    background: #101a1b;
+    color: white;
 }
 
-if (difficultyBtn) {
-    difficultyBtn.textContent = "Difficulty: Easy";
-
-    difficultyBtn.addEventListener("click", () => {
-        const levels = ["Easy", "Medium", "Hard"];
-        difficulty = levels[(levels.indexOf(difficulty) + 1) % 3];
-        difficultyBtn.textContent = "Difficulty: " + difficulty;
-    });
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-if (howBtn) {
-    howBtn.addEventListener("click", () => {
-        showModal(
-            "How to Play",
-            "Use UP and DOWN arrows to select a lane. Type the word above a zombie to defeat it. Don't let zombies reach your home!"
-        );
-    });
+.game-header button {
+    padding: 10px 18px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-if (settingsBtn) {
-    settingsBtn.addEventListener("click", () => {
-        showModal("Settings", "Sound and music settings are coming soon!");
-    });
+.battlefield {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    height: 480px;
+    box-sizing: border-box;
+    padding: 10px;
+    background: #253d32;
+    border: 3px solid #54745b;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-// Add zombie appearance
-const zombieStyles = document.createElement("style");
-zombieStyles.textContent = `
+.lane {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    border-bottom: 2px dashed rgba(255,255,255,0.2);
+    background: rgba(130,180,110,0.08);
+}
+
+.lane:last-child {
+    border-bottom: none;
+}
+
+.lane.selected-lane {
+    background: rgba(197,232,108,0.2);
+    outline: 2px solid #c5e86c;
+}
+
 .zombie {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 85px;
+    width: 90px;
     text-align: center;
-    transition: left 0.05s linear;
     z-index: 2;
 }
+
 .zombie-character {
-    font-size: 35px;
+    font-size: 34px;
 }
+
 .zombie-word {
     display: inline-block;
+    padding: 4px 7px;
+    margin-bottom: 3px;
     background: #172323;
     color: #c5e86c;
-    padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: 5px;
     font-size: 13px;
     font-weight: bold;
-    margin-bottom: 4px;
 }
-.lane.selected-lane {
-    outline: 2px solid #c5e86c;
-    background: rgba(197, 232, 108, 0.15);
+
+.typing-area {
+    text-align: center;
+    margin-top: 25px;
+}
+
+#wordInput {
+    width: min(350px, 90%);
+    box-sizing: border-box;
+    padding: 14px;
+    border: 2px solid #8bc34a;
+    border-radius: 8px;
+    background: #172323;
+    color: white;
+    font-size: 18px;
+    outline: none;
+}
+
+#wordInput:focus {
+    border-color: #c5e86c;
 }
 `;
-document.head.appendChild(zombieStyles);
 
+document.head.appendChild(gameStyles);
+
+// Lane selection
 function updateLaneSelection() {
     document.querySelectorAll(".lane").forEach((lane, index) => {
-        lane.classList.toggle("selected-lane", index === selectedLane);
+        lane.classList.toggle(
+            "selected-lane",
+            index === selectedLane
+        );
     });
 }
 
+// Spawn zombies
 function spawnZombie() {
     if (!gameRunning) return;
 
-    const lanes = document.querySelectorAll(".lane");
-    const laneIndex = Math.floor(Math.random() * lanes.length);
-    const lane = lanes[laneIndex];
-
-    const zombie = document.createElement("div");
-    zombie.className = "zombie";
+    const laneIndex = Math.floor(Math.random() * 5);
+    const lane = document.querySelector(
+        `.lane[data-lane="${laneIndex}"]`
+    );
 
     const word = words[Math.floor(Math.random() * words.length)];
 
-    zombie.innerHTML = `
-        <div class="zombie-word">${word}</div>
-        <div class="zombie-character">🧟</div>
-    `;
+    const zombieElement = document.createElement("div");
+    zombieElement.className = "zombie";
 
-    zombie.dataset.word = word;
-    zombie.dataset.lane = laneIndex;
-    zombie.style.left = "85%";
+    const wordElement = document.createElement("div");
+    wordElement.className = "zombie-word";
+    wordElement.textContent = word;
 
-    lane.appendChild(zombie);
+    const character = document.createElement("div");
+    character.className = "zombie-character";
+    character.textContent = "🧟";
+
+    zombieElement.append(wordElement, character);
+    zombieElement.style.left = "90%";
+
+    lane.appendChild(zombieElement);
 
     zombies.push({
-        element: zombie,
-        word: word,
+        element: zombieElement,
+        word,
         lane: laneIndex,
-        position: 85
+        position: 90
     });
 }
 
+// Game loop
 function updateGame(timestamp) {
     if (!gameRunning) return;
 
-    const delta = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.1) : 0;
+    const delta = lastTime
+        ? Math.min((timestamp - lastTime) / 1000, 0.1)
+        : 0;
+
     lastTime = timestamp;
 
+    const speed = settings[difficulty].speed;
+
     zombies.forEach(zombie => {
-        zombie.position -= settings[difficulty].speed * delta;
+        zombie.position -= speed * delta;
         zombie.element.style.left = zombie.position + "%";
     });
 
-    zombies = zombies.filter(zombie => {
+    const remaining = [];
+
+    zombies.forEach(zombie => {
         if (zombie.position <= 2) {
             zombie.element.remove();
             health -= 20;
-            homeHealth.textContent = health;
-
-            if (health <= 0) {
-                endGame();
-            }
-
-            return false;
+        } else {
+            remaining.push(zombie);
         }
-
-        return true;
     });
 
-    gameLoop = requestAnimationFrame(updateGame);
+    zombies = remaining;
+    homeHealth.textContent = Math.max(0, health);
+
+    if (health <= 0) {
+        endGame();
+        return;
+    }
+
+    animationFrame = requestAnimationFrame(updateGame);
 }
 
+// Start
 function startGame() {
     hideModal();
 
-    // Hide the main menu elements
-    document.querySelectorAll(
-        ".hero, .logo, .buttons, .topbar"
-    ).forEach(element => {
-        element.style.display = "none";
-    });
+    gameRunning = false;
+    clearInterval(spawnTimer);
+    cancelAnimationFrame(animationFrame);
 
-    gameScreen.style.display = "block";
+    zombies.forEach(zombie => zombie.element.remove());
+    zombies = [];
 
     score = 0;
     health = 100;
-    zombies = [];
     selectedLane = 2;
-    gameRunning = true;
     lastTime = 0;
 
     scoreValue.textContent = score;
     homeHealth.textContent = health;
-    wordInput.value = "";
+
+    gameContainer.style.display = "none";
+    gameScreen.style.display = "block";
+
+    gameRunning = true;
 
     updateLaneSelection();
+
+    wordInput.value = "";
+    wordInput.focus();
 
     spawnTimer = setInterval(
         spawnZombie,
@@ -212,73 +313,42 @@ function startGame() {
     );
 
     spawnZombie();
-    gameLoop = requestAnimationFrame(updateGame);
 
-    wordInput.focus();
+    animationFrame = requestAnimationFrame(updateGame);
 }
 
-function endGame() {
-    if (!gameRunning) return;
+playBtn.addEventListener("click", startGame);
 
-    gameRunning = false;
-    clearInterval(spawnTimer);
-    cancelAnimationFrame(gameLoop);
+// Typing
+wordInput.addEventListener("input", () => {
+    const typed = wordInput.value.trim().toUpperCase();
 
-    showModal(
-        "GAME OVER",
-        "Your home has been overrun! Final score: " + score
+    const target = zombies.find(zombie =>
+        zombie.lane === selectedLane &&
+        zombie.word === typed
     );
-}
 
-function exitToMenu() {
-    gameRunning = false;
-    clearInterval(spawnTimer);
-    cancelAnimationFrame(gameLoop);
+    if (target && typed.length > 0) {
+        target.element.remove();
 
-    zombies.forEach(zombie => zombie.element.remove());
-    zombies = [];
+        zombies = zombies.filter(zombie => zombie !== target);
 
-    gameScreen.style.display = "none";
+        score += 10;
+        scoreValue.textContent = score;
 
-    document.querySelectorAll(
-        ".hero, .logo, .buttons, .topbar"
-    ).forEach(element => {
-        element.style.display = "";
-    });
+        wordInput.value = "";
+    }
+});
 
-    hideModal();
-}
-
-if (playBtn) {
-    playBtn.addEventListener("click", startGame);
-}
-
-if (exitGame) {
-    exitGame.addEventListener("click", exitToMenu);
-}
-
-if (wordInput) {
-    wordInput.addEventListener("input", () => {
-        const typed = wordInput.value.trim().toUpperCase();
-
-        const target = zombies.find(zombie =>
-            zombie.lane === selectedLane &&
-            zombie.word === typed
-        );
-
-        if (target && typed.length > 0) {
-            target.element.remove();
-            zombies = zombies.filter(zombie => zombie !== target);
-
-            score += 10;
-            scoreValue.textContent = score;
-            wordInput.value = "";
-        }
-    });
-}
-
+// Lane controls
 document.addEventListener("keydown", event => {
-    if (!gameRunning) return;
+    if (!gameRunning) {
+        if (event.key === "Enter" &&
+            gameContainer.style.display !== "none") {
+            startGame();
+        }
+        return;
+    }
 
     if (event.key === "ArrowUp") {
         event.preventDefault();
@@ -291,4 +361,39 @@ document.addEventListener("keydown", event => {
         selectedLane = Math.min(4, selectedLane + 1);
         updateLaneSelection();
     }
+
+    if (event.key === "Escape") {
+        exitToMenu();
+    }
 });
+
+// Game over
+function endGame() {
+    gameRunning = false;
+
+    clearInterval(spawnTimer);
+    cancelAnimationFrame(animationFrame);
+
+    showModal(
+        "GAME OVER",
+        `Your home was overrun! Final score: ${score}`
+    );
+}
+
+// Exit
+function exitToMenu() {
+    gameRunning = false;
+
+    clearInterval(spawnTimer);
+    cancelAnimationFrame(animationFrame);
+
+    zombies.forEach(zombie => zombie.element.remove());
+    zombies = [];
+
+    gameScreen.style.display = "none";
+    gameContainer.style.display = "";
+
+    hideModal();
+}
+
+exitGame.addEventListener("click", exitToMenu);
