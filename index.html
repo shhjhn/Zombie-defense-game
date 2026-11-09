@@ -103,6 +103,37 @@
         </div>
     </div>
 
+<section id="gameScreen" class="game-screen" style="display: none;">
+
+    <header class="game-header">
+        <h2>🧟 ZOMBIE TYPE DEFENSE</h2>
+        <div>Score: <span id="scoreValue">0</span></div>
+        <div>Home: <span id="homeHealth">100</span>%</div>
+        <button id="exitGame">EXIT</button>
+    </header>
+
+    <div class="battlefield" id="battlefield">
+
+        <div class="lane" data-lane="0"></div>
+        <div class="lane" data-lane="1"></div>
+        <div class="lane" data-lane="2"></div>
+        <div class="lane" data-lane="3"></div>
+        <div class="lane" data-lane="4"></div>
+
+    </div>
+
+    <div class="typing-area">
+        <p>Type the zombie's word to defeat it!</p>
+        <input
+            id="wordInput"
+            type="text"
+            placeholder="Type here..."
+            autocomplete="off"
+        >
+    </div>
+
+</section>
+
     <script src="script.js"></script>
 
 </body>
