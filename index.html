@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombie Type Defense</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="game-container">
+
+        <header class="topbar">
+            <div class="logo">
+                ZOMBIE TYPE <span>DEFENSE</span>
+            </div>
+            <div class="status">
+                ● NIGHT WATCH ACTIVE
+            </div>
+        </header>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="eyebrow">YOUR HOME. YOUR LAST LINE.</p>
+
+                <h1>
+                    TYPE FAST.<br>
+                    <span>STAY ALIVE.</span>
+                </h1>
+
+                <p class="description">
+                    The night is crawling with the undead.
+                    Keep your fingers ready, protect your home,
+                    and don't let a single word slip by.
+                </p>
+
+                <div class="buttons">
+                    <button id="playBtn" class="play-btn">
+                        ▶ START DEFENDING
+                    </button>
+
+                    <button id="difficultyBtn">
+                        DIFFICULTY: <span id="difficulty">EASY</span>
+                    </button>
+
+                    <button id="howBtn">
+                        HOW TO PLAY
+                    </button>
+
+                    <button id="settingsBtn">
+                        SETTINGS
+                    </button>
+                </div>
+
+                <div class="enter-hint">
+                    <kbd>ENTER</kbd>
+                    PRESS TO START
+                </div>
+
+            </div>
+
+            <div class="hero-art">
+                <div class="moon"></div>
+
+                <div class="house">
+                    <div class="roof"></div>
+                    <div class="house-body">
+                        <div class="window"></div>
+                        <div class="door"></div>
+                    </div>
+                </div>
+
+                <div class="survivor">
+                    🧍
+                </div>
+
+                <div class="zombie zombie-one">🧟</div>
+                <div class="zombie zombie-two">🧟</div>
+
+                <div class="word word-one">HUNGRY</div>
+                <div class="word word-two">BRAIN</div>
+            </div>
+
+        </section>
+
+        <footer>
+            <span>✚ KEEP YOUR HOME SAFE</span>
+            <span>BUILD 0.1 · PRE-ALPHA</span>
+        </footer>
+
+    </main>
+
+    <!-- Menu dialogs -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-box">
+            <button id="closeBtn" class="close-btn">×</button>
+            <h2 id="modalTitle"></h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
