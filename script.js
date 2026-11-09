@@ -320,18 +320,23 @@ function startGame() {
 playBtn.addEventListener("click", startGame);
 
 // Typing
+
 wordInput.addEventListener("input", () => {
     const typed = wordInput.value.trim().toUpperCase();
 
-    const target = zombies.find(zombie =>
-        zombie.lane === selectedLane &&
-        zombie.word === typed
-    );
+    // Find a matching zombie in the selected lane
+    const targetIndex = zombies.findIndex(zombie => {
+        return (
+            Number(zombie.lane) === Number(selectedLane) &&
+            zombie.word.trim().toUpperCase() === typed
+        );
+    });
 
-    if (target && typed.length > 0) {
+    if (targetIndex !== -1 && typed.length > 0) {
+        const target = zombies[targetIndex];
+
         target.element.remove();
-
-        zombies = zombies.filter(zombie => zombie !== target);
+        zombies.splice(targetIndex, 1);
 
         score += 10;
         scoreValue.textContent = score;
@@ -340,7 +345,6 @@ wordInput.addEventListener("input", () => {
     }
 });
 
-// Lane controls
 document.addEventListener("keydown", event => {
     if (!gameRunning) {
         if (event.key === "Enter" &&
