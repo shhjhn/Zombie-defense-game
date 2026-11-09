@@ -1,0 +1,441 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #101820;
+    --lime: #c8f169;
+    --text: #f3f5ef;
+    --muted: #aab8b6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.game-container {
+    min-height: 100vh;
+    padding: 26px 6%;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 75% 45%,
+        #29413c 0%, #17282e 40%, #101820 80%);
+}
+
+/* HEADER */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: var(--lime);
+}
+
+.status {
+    color: var(--lime);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+/* MAIN SECTION */
+
+.hero {
+    min-height: 75vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 35px;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.eyebrow {
+    color: var(--lime);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 22px;
+}
+
+h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(48px, 6vw, 85px);
+    line-height: 0.95;
+    letter-spacing: -4px;
+}
+
+h1 span {
+    color: var(--lime);
+}
+
+.description {
+    max-width: 430px;
+    margin: 25px 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* BUTTONS */
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s ease;
+}
+
+.play-btn {
+    width: 100%;
+    max-width: 260px;
+    height: 57px;
+    background: var(--lime);
+    color: #18231d;
+    border: none;
+    border-radius: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.play-btn:hover {
+    background: #dcff91;
+    transform: translateY(-3px);
+}
+
+.buttons button:not(.play-btn) {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.13);
+    color: #dce4dc;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.buttons button:not(.play-btn):hover {
+    border-color: var(--lime);
+    color: var(--lime);
+}
+
+#difficulty {
+    color: var(--lime);
+}
+
+.enter-hint {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    color: #82918e;
+    letter-spacing: 1px;
+}
+
+kbd {
+    padding: 7px 10px;
+    border: 1px solid #52615b;
+    border-radius: 5px;
+    color: white;
+}
+
+/* GAME ART */
+
+.hero-art {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(
+        #263b40,
+        #263b3b 55%,
+        #1b2e2d
+    );
+}
+
+.moon {
+    position: absolute;
+    top: 12%;
+    right: 15%;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #e8e9c9;
+    box-shadow: 0 0 55px rgba(233,235,195,0.3);
+}
+
+.hero-art::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 25%;
+    background: linear-gradient(#344a39, #1b332d);
+    border-top: 2px solid rgba(173,204,113,0.2);
+}
+
+/* HOUSE */
+
+.house {
+    position: absolute;
+    z-index: 2;
+    bottom: 25%;
+    left: 12%;
+    width: 45%;
+    height: 42%;
+}
+
+.roof {
+    position: absolute;
+    top: 0;
+    left: -7%;
+    width: 114%;
+    height: 42%;
+    background: #273139;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.house-body {
+    position: absolute;
+    bottom: 0;
+    left: 7%;
+    width: 86%;
+    height: 67%;
+    background: #a89873;
+    border: 3px solid #4a4b40;
+}
+
+.window {
+    position: absolute;
+    top: 20%;
+    left: 12%;
+    width: 23%;
+    height: 35%;
+    background: #e4c77b;
+    border: 5px solid #4b5148;
+    box-shadow: 0 0 20px rgba(246,203,111,0.3);
+}
+
+.door {
+    position: absolute;
+    bottom: 0;
+    left: 42%;
+    width: 23%;
+    height: 60%;
+    background: #4b5149;
+    border: 4px solid #5d5d4d;
+}
+
+/* SURVIVOR */
+
+.survivor {
+    position: absolute;
+    z-index: 4;
+    bottom: 22%;
+    left: 47%;
+    font-size: 90px;
+    filter: drop-shadow(0 8px 8px rgba(0,0,0,0.4));
+    animation: idle 3s ease-in-out infinite;
+}
+
+/* ZOMBIES */
+
+.zombie {
+    position: absolute;
+    z-index: 4;
+    font-size: 65px;
+    animation: zombieWalk 2s ease-in-out infinite;
+}
+
+.zombie-one {
+    bottom: 24%;
+    right: 12%;
+}
+
+.zombie-two {
+    bottom: 23%;
+    right: 0%;
+    font-size: 50px;
+    animation-delay: -1s;
+}
+
+.word {
+    position: absolute;
+    z-index: 5;
+    padding: 7px 12px;
+    background: rgba(18,29,28,0.9);
+    border: 1px solid var(--lime);
+    border-radius: 6px;
+    color: var(--lime);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.word-one {
+    right: 10%;
+    bottom: 49%;
+}
+
+.word-two {
+    right: 0;
+    bottom: 40%;
+}
+
+/* FOOTER */
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 17px;
+    color: #82918e;
+    font-size: 9px;
+    letter-spacing: 1px;
+    font-weight: 800;
+}
+
+/* MODAL WINDOWS */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border: 1px solid rgba(200,241,105,0.3);
+    border-radius: 17px;
+    background: #1b2b32;
+}
+
+.modal-box h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    margin-bottom: 20px;
+    font-size: 27px;
+}
+
+.modal-box p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 17px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+}
+
+.modal-action {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    background: var(--lime);
+    border: none;
+    border-radius: 8px;
+    font-weight: 900;
+}
+
+/* ANIMATIONS */
+
+@keyframes idle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes zombieWalk {
+    0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 850px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding: 55px 0;
+    }
+
+    .hero-art {
+        height: 400px;
+    }
+
+    h1 {
+        font-size: 65px;
+    }
+}
+
+@media (max-width: 500px) {
+    .game-container {
+        padding: 20px;
+    }
+
+    .hero-art {
+        height: 320px;
+    }
+
+    h1 {
+        font-size: 48px;
+        letter-spacing: -2px;
+    }
+
+    footer {
+        font-size: 7px;
+    }
+}
